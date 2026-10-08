@@ -16,7 +16,6 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 body {
   margin: 0;
   font-family: var(--body);
@@ -32,6 +31,11 @@ h1, h2, h3, h4 { font-family: var(--heading); color: var(--black); margin: 0; li
 p { margin: 0 0 1em; }
 ul { margin: 0; }
 :focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+/* Keep the footer at the bottom of short pages */
+#root { min-height: 100vh; display: flex; flex-direction: column; }
+main { flex: 1; display: flex; flex-direction: column; }
+main > section { flex: 1; }
 
 /* ---------- Header ---------- */
 .site-header {
@@ -204,7 +208,7 @@ ul { margin: 0; }
 .form-status { font-size: .88rem; color: var(--blue); font-weight: 700; margin: 0; }
 
 /* ---------- Footer ---------- */
-footer { padding: 40px 44px 44px; max-width: 1920px; margin: 0 auto; display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; font-size: .82rem; }
+footer { width: 100%; padding: 40px 44px 44px; max-width: 1920px; margin: 0 auto; display: flex; justify-content: space-between; align-items: end; gap: 32px; flex-wrap: wrap; font-size: .82rem; }
 .foot-cols { display: flex; gap: 72px; text-align: center; }
 .foot-cols h4 { font-family: var(--body); font-size: .85rem; font-weight: 700; margin-bottom: 8px; }
 .foot-cols a { text-decoration: none; }
@@ -230,7 +234,6 @@ footer { padding: 40px 44px 44px; max-width: 1920px; margin: 0 auto; display: fl
   }
   .nav-links.open { display: flex; }
   .nav-links a { display: block; padding: 14px 0; border-bottom: 1px solid #eee; }
-  html { scroll-padding-top: 68px; }
 
   #about { padding-bottom: 64px; }
   .about-bg { width: 100%; height: 240px; }
@@ -269,6 +272,5 @@ footer { padding: 40px 44px 44px; max-width: 1920px; margin: 0 auto; display: fl
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
   * { transition: none !important; }
 }

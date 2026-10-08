@@ -112,15 +112,17 @@ const DEFAULT_DATA = {
   ],
 }
 
+// Each item is a separate page. "path" is the folder that holds that page's index.html.
 const NAV = [
-  { id: 'about', label: 'About Me' },
-  { id: 'resume', label: 'Resume' },
-  { id: 'projects', label: 'Projects' },
-  { id: 'blogs', label: 'Blogs' },
-  { id: 'contact', label: 'Contact' },
+  { id: 'about', label: 'About Me', path: '' },
+  { id: 'resume', label: 'Resume', path: 'resume/' },
+  { id: 'projects', label: 'Projects', path: 'projects/' },
+  { id: 'blogs', label: 'Blogs', path: 'blogs/' },
+  { id: 'contact', label: 'Contact', path: 'contact/' },
 ]
 
 const asset = (file) => `${import.meta.env.BASE_URL}${file}`
+const pageUrl = (id) => asset(NAV.find((n) => n.id === id).path)
 
 /* ---------------------------- Icons ---------------------------- */
 const ICONS = {
@@ -260,7 +262,7 @@ function Header({ data, active }) {
   return (
     <header className={`site-header${scrolled ? ' scrolled' : ''}`}>
       <nav className="nav" aria-label="Main">
-        <a className="brand" href="#about"><span className="square" aria-hidden="true" />{data.firstName} {data.lastName}</a>
+        <a className="brand" href={pageUrl('about')}><span className="square" aria-hidden="true" />{data.firstName} {data.lastName}</a>
         <button
           className="nav-toggle"
           aria-expanded={open}
@@ -273,7 +275,13 @@ function Header({ data, active }) {
         <ul className={`nav-links${open ? ' open' : ''}`} id="nav-links">
           {NAV.map((n) => (
             <li key={n.id}>
-              <a href={`#${n.id}`} className={active === n.id ? 'active' : ''} onClick={() => setOpen(false)}>{n.label}</a>
+              <a
+                href={pageUrl(n.id)}
+                className={active === n.id ? 'active' : ''}
+                aria-current={active === n.id ? 'page' : undefined}
+              >
+                {n.label}
+              </a>
             </li>
           ))}
         </ul>
@@ -314,7 +322,7 @@ function About({ data }) {
           {data.about.map((p) => <p key={p}>{p}</p>)}
           <div className="about-actions">
             <a className="btn" href={asset(data.resumePdf)} download><Icon name="download" />Download Resume</a>
-            <a className="btn outline" href="#contact">Contact Me</a>
+            <a className="btn outline" href={pageUrl('contact')}>Contact Me</a>
           </div>
         </div>
       </div>
@@ -492,29 +500,18 @@ function Contact({ data }) {
 }
 
 /* ---------------------------- App ---------------------------- */
-export default function App() {
-  const data = DEFAULT_DATA
-  const [active, setActive] = useState('about')
+const PAGES = { about: About, resume: Resume, projects: Projects, blogs: Blogs, contact: Contact }
 
-  // Highlight the menu item for the section on screen
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
-      { rootMargin: '-45% 0px -50% 0px' }
-    )
-    document.querySelectorAll('main section[id]').forEach((s) => observer.observe(s))
-    return () => observer.disconnect()
-  }, [])
+// "page" comes from the data-page attribute in each page's index.html (see main.jsx).
+export default function App({ page = 'about' }) {
+  const data = DEFAULT_DATA
+  const Page = PAGES[page] || About
 
   return (
     <>
-      <Header data={data} active={active} />
+      <Header data={data} active={page} />
       <main>
-        <About data={data} />
-        <Resume data={data} />
-        <Projects data={data} />
-        <Blogs data={data} />
-        <Contact data={data} />
+        <Page data={data} />
       </main>
       <footer>
         <div>© {new Date().getFullYear()} by {data.firstName} {data.lastName}.</div>

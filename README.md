@@ -1,6 +1,6 @@
 # Yash Desai — Portfolio
 
-A personal finance portfolio built with React and Vite. It has five sections: About Me, Resume, Projects, Blogs, and Contact.
+A personal finance portfolio built with React and Vite. It has five pages: About Me, Resume, Projects, Blogs, and Contact.
 
 Live site (after setup): `https://ydesai877.github.io/Portfolio/`
 
@@ -48,13 +48,25 @@ Open the URL that Vite shows (usually `http://localhost:5173/Portfolio/`).
 
 ## Structure
 
+Page addresses:
+
+- About Me: `/Portfolio/`
+- Resume: `/Portfolio/resume/`
+- Projects: `/Portfolio/projects/`
+- Blogs: `/Portfolio/blogs/`
+- Contact: `/Portfolio/contact/`
+
 ```
 .github/workflows/deploy.yml   Builds and publishes the site to GitHub Pages
 public/profile.jpg             Your photo (keep your existing file)
 public/resume.pdf              Resume for the download buttons
-src/App.jsx                    Site content (DEFAULT_DATA) and sections
+src/App.jsx                    Site content (DEFAULT_DATA) and page layouts
 src/styles.css                 Colors, fonts, and layout
 src/main.jsx                   React entry point
-index.html                     Page shell, fonts, and meta tags
-vite.config.js                 Vite settings (base path for GitHub Pages)
+index.html                     About Me page (fonts and meta tags)
+resume/index.html              Resume page
+projects/index.html            Projects page
+blogs/index.html               Blogs page
+contact/index.html             Contact page
+vite.config.js                 Vite settings: base path and the list of pages
 ```
