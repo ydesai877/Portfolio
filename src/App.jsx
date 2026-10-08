@@ -14,6 +14,9 @@ const DEFAULT_DATA = {
   github: 'https://github.com/ydesai877',
   photo: 'profile.jpg', // in /public. If the file is missing, the site shows the initials.
   resumePdf: 'resume.pdf', // in /public
+  // Web3Forms access key: the contact form sends messages to your email through web3forms.com.
+  // This key is safe to publish. It only lets visitors send messages to you.
+  web3formsKey: 'f8d9e902-a6b0-4f8c-99c0-8405be1b8f1d',
 
   about: [
     'I’m Yash Desai, a finance graduate from San Francisco State University with a B.S. in Business and a concentration in Finance. I have hands-on experience in financial analysis, ESG investing, and data-driven decision-making, with a strong foundation in financial statement analysis, risk management, and portfolio evaluation.',
@@ -440,12 +443,14 @@ function Blogs({ data }) {
 
 /* ---------------------------- Contact ---------------------------- */
 function Contact({ data }) {
-  const [form, setForm] = useState({ first: '', last: '', email: '', subject: '', message: '' })
+  const empty = { first: '', last: '', email: '', subject: '', message: '' }
+  const [form, setForm] = useState(empty)
   const [invalid, setInvalid] = useState({})
-  const [status, setStatus] = useState('')
+  const [status, setStatus] = useState({ type: '', text: '' }) // type: '', 'sending', 'success', 'error'
+  const [botcheck, setBotcheck] = useState(false) // hidden spam trap; people never tick it
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value })
 
-  const submit = (e) => {
+  const submit = async (e) => {
     e.preventDefault()
     const bad = {
       first: !form.first.trim(),
@@ -454,14 +459,38 @@ function Contact({ data }) {
     }
     setInvalid(bad)
     if (bad.first || bad.last || bad.email) {
-      setStatus('Please fill in your name and a valid email.')
+      setStatus({ type: 'error', text: 'Please fill in your name and a valid email.' })
       return
     }
-    // GitHub Pages has no server, so the form opens the visitor's email app with the message filled in.
-    const subject = form.subject.trim() || `Portfolio message from ${form.first} ${form.last}`
-    const body = `${form.message}\n\n— ${form.first} ${form.last}\n${form.email}`
-    window.location.href = `mailto:${data.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setStatus('Opening your email app…')
+
+    // Send the message to Web3Forms, which emails it to you. No email app opens.
+    setStatus({ type: 'sending', text: 'Sending…' })
+    const name = `${form.first.trim()} ${form.last.trim()}`
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: data.web3formsKey,
+          subject: form.subject.trim() ? `Portfolio: ${form.subject.trim()}` : `Portfolio message from ${name}`,
+          from_name: `${data.firstName} ${data.lastName} Portfolio`,
+          name,
+          email: form.email.trim(),
+          message: form.message.trim() || '(No message)',
+          botcheck,
+        }),
+      })
+      const result = await res.json().catch(() => ({}))
+      if (res.ok && result.success) {
+        setForm(empty)
+        setInvalid({})
+        setStatus({ type: 'success', text: 'Thanks! Your message was sent. I will reply soon.' })
+      } else {
+        throw new Error(result.message || 'Send failed')
+      }
+    } catch {
+      setStatus({ type: 'error', text: `Sorry, the message did not send. Please email me at ${data.email}.` })
+    }
   }
 
   return (
@@ -489,9 +518,21 @@ function Contact({ data }) {
             <label htmlFor="message">Message</label>
             <textarea id="message" value={form.message} onChange={set('message')} />
           </div>
+          <input
+            type="checkbox"
+            name="botcheck"
+            className="botcheck"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            checked={botcheck}
+            onChange={(e) => setBotcheck(e.target.checked)}
+          />
           <div className="form-foot">
-            <button className="btn" type="submit">Send</button>
-            <p className="form-status" role="status" aria-live="polite">{status}</p>
+            <button className="btn" type="submit" disabled={status.type === 'sending'}>
+              {status.type === 'sending' ? 'Sending…' : 'Send'}
+            </button>
+            <p className={`form-status ${status.type}`} role="status" aria-live="polite">{status.text}</p>
           </div>
         </form>
       </div>

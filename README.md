@@ -30,12 +30,11 @@ All text is in the `DEFAULT_DATA` object at the top of `src/App.jsx`.
 
 ## Contact form
 
-GitHub Pages cannot run a server. The form opens the visitor's email app with the message filled in, addressed to `yashdesai201@gmail.com`.
+The form sends messages through Web3Forms (web3forms.com). Web3Forms emails each message to `yashdesai201@gmail.com`. No email app opens for the visitor.
 
-To receive messages without the visitor's email app, use a free form service such as Formspree:
-
-1. Create a form at formspree.io and copy its endpoint URL.
-2. In `src/App.jsx`, in the `submit` function, replace the `mailto` line with a `fetch(endpoint, { method: 'POST', ... })` call.
+- The access key is `web3formsKey` in `src/App.jsx`. It is safe to publish.
+- To change the email address that receives messages, create a new key at web3forms.com and replace `web3formsKey`.
+- A hidden `botcheck` field blocks simple spam bots.
 
 ## Run on your computer
 
