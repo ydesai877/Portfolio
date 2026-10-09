@@ -20,7 +20,7 @@ const DEFAULT_DATA = {
 
   about: [
     'I’m Yash Desai, a finance graduate from San Francisco State University with a B.S. in Business and a concentration in Finance. I have hands-on experience in financial analysis, ESG investing, and data-driven decision-making, with a strong foundation in financial statement analysis, risk management, and portfolio evaluation.',
-    'I build budgets, forecasts, financial models, and KPI reports with Excel, SQL, Power BI, Tableau, and Python. Through roles at Dollar Tree, Chipotle, and Walmart, I have reconciled cash against sales reports, audited discrepancies, and enforced asset controls in fast-paced, high-volume operations. I hold Risk Management and Compliance Risk Management credentials from CFI, completed the Goldman Sachs Risk Job Simulation, and I am pursuing the FINRA SIE. My goal is an entry-level role in finance or banking.',
+    'I build budgets, forecasts, financial models, and KPI reports with Excel, SQL, Power BI, Tableau, and Python. Through roles at Dollar Tree, Chipotle, and Walmart, I have reconciled cash against sales reports, audited discrepancies, and enforced asset controls in fast-paced, high-volume operations. I hold Risk Management and Compliance Risk Management credentials from CFI, completed the Goldman Sachs Risk Job Simulation, and I am pursuing the FINRA SIE. Actively seeking an entry-level role as finance analyst.',
   ],
 
   education: [
