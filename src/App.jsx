@@ -120,8 +120,6 @@ const NAV = [
   { id: 'about', label: 'About Me', path: '' },
   { id: 'resume', label: 'Resume', path: 'resume/' },
   { id: 'projects', label: 'Projects', path: 'projects/' },
-  { id: 'blogs', label: 'Blogs', path: 'blogs/' },
-  { id: 'contact', label: 'Contact', path: 'contact/' },
 ]
 
 const asset = (file) => `${import.meta.env.BASE_URL}${file}`
@@ -325,7 +323,6 @@ function About({ data }) {
           {data.about.map((p) => <p key={p}>{p}</p>)}
           <div className="about-actions">
             <a className="btn" href={asset(data.resumePdf)} download><Icon name="download" />Download Resume</a>
-            <a className="btn outline" href={pageUrl('contact')}>Contact Me</a>
           </div>
         </div>
       </div>
@@ -541,7 +538,7 @@ function Contact({ data }) {
 }
 
 /* ---------------------------- App ---------------------------- */
-const PAGES = { about: About, resume: Resume, projects: Projects, blogs: Blogs, contact: Contact }
+const PAGES = { about: About, resume: Resume, projects: Projects }
 
 // "page" comes from the data-page attribute in each page's index.html (see main.jsx).
 export default function App({ page = 'about' }) {
